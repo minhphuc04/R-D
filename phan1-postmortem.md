@@ -2,8 +2,6 @@
 
 **Bối cảnh:** máy `web-hcm-07` là một node shared hosting (Nginx + PHP-FPM 8.1 + MySQL 8) chạy khoảng 40 website của khách hàng. Rạng sáng ngày **20/10/2026** (khoảng từ 01:00), hàng loạt website trên máy này bắt đầu trả về lỗi 502/504. Đến 02:21, kỹ sư on-call SSH vào kiểm tra và lưu lại một số output hiện trạng.
 --
-# Postmortem: web-hcm-07 trả 502/504 hàng loạt, rạng sáng 20/10/2026
-
 ## 1. Tóm tắt sự cố
 
 Từ khoảng 01:33 ngày 20/10, các website trên `web-hcm-07` trả 502/504 cho gần như toàn bộ request động (PHP). Trong log LB, 2.775 request lỗi so với 157 request động trả 200 sau mốc này, tức khoảng 95% request động lỗi. Cả 5 domain xuất hiện trong log LB đều bị ảnh hưởng. Ảnh hưởng kéo dài đến lúc on-call vào máy (02:21), khoảng 48 phút.
