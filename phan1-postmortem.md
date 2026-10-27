@@ -13,7 +13,7 @@ Từ khoảng 01:33 ngày 20/10, các website trên `web-hcm-07` trả 502/504 c
 | Thời điểm | Sự kiện | Nguồn |
 |---|---|---|
 | 13/10 00:00 | logrotate chạy bình thường (không có lỗi) | `syslog` |
-| **13/10 17:42–17:44** | `hieunv` sửa `/etc/logrotate.d/nginx` bằng vim, rồi `systemctl reload nginx` <br><br><img src="https://github.com/user-attachments/assets/8d6da4cc-2b72-4974-93fe-f14e996ff9c7" width="800" alt="Minh chứng sửa cấu hình logrotate">| `syslog` |
+| **13/10 17:42–17:44** | `hieunv` sửa `/etc/logrotate.d/nginx` bằng vim, rồi `systemctl reload nginx`| `syslog` |
 | **14/10 00:00:02** | Lần đầu logrotate báo `unknown option 'dailly'`, bỏ qua cấu hình nginx. Lỗi lặp lại mỗi đêm đến 20/10 | `syslog` |
 | 14/10 → 20/10 | `disk-check.sh` ghi mức dùng đĩa: 57% → 62 → 67 → 72 → 77 → **82% (WARN, 19/10)** → **87% (WARN, 20/10 00:30)**, tăng khoảng 5 điểm % (~5,9 GB) mỗi ngày. Trước 13/10 chỉ tăng khoảng 1%/ngày | `syslog` |
 | 20/10 01:00:02 | Backup `/home` → `/var/backups/sites-20261020.tar.gz` bắt đầu, file backup cũ (19 GB) vẫn còn trên đĩa | `syslog`, `backup-sites.sh` |
