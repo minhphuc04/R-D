@@ -50,6 +50,10 @@ limit_req_status 429;  limit_req_dry_run on;   # ngưỡng chỉ là điểm kh�
 
 *Hạn chế:* lab nhỏ (1 vCPU, 1 endpoint, tải từ xa qua Internet), chưa đo tách biệt ảnh hưởng của RTT mạng; số liệu đủ để so sánh xu hướng, không đại diện tuyệt đối cho môi trường 40 vhost thật. Cấu hình `burst=5`, `rate=10r/s` chỉ là điểm khởi đầu, cần tinh chỉnh theo lưu lượng thật và theo dõi false-positive bằng `limit_req_dry_run` trước khi enforce.
 
-1. https://nginx.org/en/docs/http/ngx_http_limit_req_module.html
-2. https://wiki.nftables.org/wiki-nftables/index.php/Meters
-3. https://nginx.org/en/docs/http/ngx_http_realip_module.html
+## Tài liệu tham khảo
+
+[1] Nginx, "Module ngx_http_limit_req_module," https://nginx.org/en/docs/http/ngx_http_limit_req_module.html (truy cập 28/10/2026).
+
+[2] nftables Wiki, "Meters," https://wiki.nftables.org/wiki-nftables/index.php/Meters (truy cập 28/10/2026).
+
+[3] Nginx, "Module ngx_http_realip_module," https://nginx.org/en/docs/http/ngx_http_realip_module.html (truy cập 28/10/2026).
