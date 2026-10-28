@@ -69,8 +69,10 @@ Tất cả ngưỡng đều **override được qua CLI**.
 9. **Ngưỡng an toàn khi migrate:** VM chỉ được chuyển sang node đích nếu sau khi
    nhận, node đích vẫn thỏa **cả 3 ngưỡng** (CPU, RAM, overcommit). Nếu không
    tìm được node đích phù hợp, VM **không được migrate** và node nguồn vẫn giữ
-   trạng thái quá tải.
-
+   trạng thái quá tải (có warning rõ).
+10. **Node mem_total nghi sai đơn vị:** nếu `mem_total < 1GB` và là bội số của
+1024, tool cảnh báo thêm giả thuyết "nếu đơn vị là MiB thì X MiB = Y GiB"
+(ví dụ `hcm-c3-n06`: 262144 MiB = 256 GiB).
 ## Ví dụ output thực tế
 
 ### 1. Output dạng bảng (ngưỡng mặc định 80/85/4)
@@ -84,20 +86,19 @@ python3 proxmox_balance.py ../phan2-proxmox/cluster-pve-hcm-c3.json
 Output:
 
 ```text
-
-=== TẢI TỪNG NODE ===
+=== TẢI TỪNG NODE (TRƯỚC MIGRATE) ===
 NODE           STATUS         CPU    CPU%                 MEM    MEM%  vCPU    OC  TÌNH TRẠNG
 ---------------------------------------------------------------------------------------------
-hcm-c3-n01     online     47.4/64   74.1%   444.74GB/549.76GB   80.9%   102 1.59x  ok           
+hcm-c3-n01     online     55.0/64   85.9%   511.27GB/549.76GB   93.0%   110 1.72x  QUÁ TẢI      CPU 85.9% > 80% RAM 93.0% > 85%
 hcm-c3-n02     online     27.9/64   43.6%   328.00GB/549.76GB   59.7%    92 1.44x  ok           
-hcm-c3-n03     online     25.8/48   53.8%   260.32GB/412.32GB   63.1%    88 1.83x  ok           
+hcm-c3-n03     online     18.2/48   38.0%   193.79GB/412.32GB   47.0%    80 1.67x  ok           
 hcm-c3-n04     offline     0.0/48    0.0%     0.00GB/412.32GB    0.0%     0 0.00x  offline      
 hcm-c3-n05     online     44.8/64   70.0%   395.07GB/549.76GB   71.9%    60 0.94x  ok           
-hcm-c3-n06     online         n/a     n/a                 n/a     n/a    94   n/a  DỮ LIỆU HỎNG mem_total=262144 bytes quá nhỏ (<1GB) - dữ liệu nghi hỏng
+hcm-c3-n06     online         n/a     n/a                 n/a     n/a    94   n/a  DỮ LIỆU HỎNG mem_total=262144 bytes quá nhỏ (<1GB) - dữ liệu nghi hỏng (nếu đơn vị là MiB thì 262144 MiB = 256 GiB -> có thể exporter xuất sai đơn vị)
 
 === CẢNH BÁO DỮ LIỆU ===
   [!] node hcm-c3-n04: node offline - không thể nhận VM
-  [!] node hcm-c3-n06: mem_total=262144 bytes quá nhỏ (<1GB) - dữ liệu nghi hỏng
+  [!] node hcm-c3-n06: mem_total=262144 bytes quá nhỏ (<1GB) - dữ liệu nghi hỏng (nếu đơn vị là MiB thì 262144 MiB = 256 GiB -> có thể exporter xuất sai đơn vị)
   [!] vmid=2067 (wp-host-992): cpu_usage=31.0 ngoài [0,1] -> giả định đơn vị %, chia 100
   [!] vmid=2073 (vps-nvme-430): cpu_usage=98.0 ngoài [0,1] -> giả định đơn vị %, chia 100
   [!] vmid=2065 (cloud-std-682): cpu_usage=20.8 ngoài [0,1] -> giả định đơn vị %, chia 100
@@ -114,6 +115,7 @@ hcm-c3-n06     online         n/a     n/a                 n/a     n/a    94   n/
   hcm-c3-n03: CPU 53.8% | RAM 63.1% | OC 1.83x
   hcm-c3-n05: CPU 70.0% | RAM 71.9% | OC 0.94x
   hcm-c3-n06: n/a (dữ liệu nghi hỏng, cần kiểm tra thủ công)
+
 ```
 
 ### 2. Output dạng bảng (ngưỡng chặt 70/70/2)
@@ -128,25 +130,25 @@ python3 proxmox_balance.py ../phan2-proxmox/cluster-pve-hcm-c3.json \
 Output:
 
 ```text
-
-=== TẢI TỪNG NODE ===
+=== TẢI TỪNG NODE (TRƯỚC MIGRATE) ===
 NODE           STATUS         CPU    CPU%                 MEM    MEM%  vCPU    OC  TÌNH TRẠNG
 ---------------------------------------------------------------------------------------------
-hcm-c3-n01     online     42.3/64   66.1%   371.46GB/549.76GB   67.6%    96 1.50x  ok           
-hcm-c3-n02     online     29.9/64   46.7%   373.80GB/549.76GB   68.0%    94 1.47x  ok           
-hcm-c3-n03     online     28.9/48   60.3%   287.80GB/412.32GB   69.8%    92 1.92x  ok           
+hcm-c3-n01     online     55.0/64   85.9%   511.27GB/549.76GB   93.0%   110 1.72x  QUÁ TẢI      CPU 85.9% > 70% RAM 93.0% > 70%
+hcm-c3-n02     online     27.9/64   43.6%   328.00GB/549.76GB   59.7%    92 1.44x  ok           
+hcm-c3-n03     online     18.2/48   38.0%   193.79GB/412.32GB   47.0%    80 1.67x  ok           
 hcm-c3-n04     offline     0.0/48    0.0%     0.00GB/412.32GB    0.0%     0 0.00x  offline      
 hcm-c3-n05     online     44.8/64   70.0%   395.07GB/549.76GB   71.9%    60 0.94x  QUÁ TẢI      RAM 71.9% > 70%
-hcm-c3-n06     online         n/a     n/a                 n/a     n/a    94   n/a  DỮ LIỆU HỎNG mem_total=262144 bytes quá nhỏ (<1GB) - dữ liệu nghi hỏng
+hcm-c3-n06     online         n/a     n/a                 n/a     n/a    94   n/a  DỮ LIỆU HỎNG mem_total=262144 bytes quá nhỏ (<1GB) - dữ liệu nghi hỏng (nếu đơn vị là MiB thì 262144 MiB = 256 GiB -> có thể exporter xuất sai đơn vị)
 
 === CẢNH BÁO DỮ LIỆU ===
   [!] node hcm-c3-n04: node offline - không thể nhận VM
-  [!] node hcm-c3-n06: mem_total=262144 bytes quá nhỏ (<1GB) - dữ liệu nghi hỏng
+  [!] node hcm-c3-n06: mem_total=262144 bytes quá nhỏ (<1GB) - dữ liệu nghi hỏng (nếu đơn vị là MiB thì 262144 MiB = 256 GiB -> có thể exporter xuất sai đơn vị)
   [!] vmid=2067 (wp-host-992): cpu_usage=31.0 ngoài [0,1] -> giả định đơn vị %, chia 100
   [!] vmid=2073 (vps-nvme-430): cpu_usage=98.0 ngoài [0,1] -> giả định đơn vị %, chia 100
   [!] vmid=2065 (cloud-std-682): cpu_usage=20.8 ngoài [0,1] -> giả định đơn vị %, chia 100
   [!] vmid=2199 (wp-host-377): mem_used=None, bỏ qua
   [!] vmid=2390 (vps-nvme-512): node='hcm-c3-n07' không có trong danh sách nodes
+  [!] node hcm-c3-n05: quá tải (RAM 71.9% > 70%) nhưng không tìm được node đích phù hợp để migrate
 
 === KẾ HOẠCH MIGRATE ===
   Đề xuất 3 migration:
@@ -160,6 +162,8 @@ hcm-c3-n06     online         n/a     n/a                 n/a     n/a    94   n/
   hcm-c3-n03: CPU 60.3% | RAM 69.8% | OC 1.92x
   hcm-c3-n05: CPU 70.0% | RAM 71.9% | OC 0.94x
   hcm-c3-n06: n/a (dữ liệu nghi hỏng, cần kiểm tra thủ công)
+
+
 ```
 
 ### 3. Output dạng JSON
@@ -172,16 +176,38 @@ python3 proxmox_balance.py ../phan2-proxmox/cluster-pve-hcm-c3.json --format jso
 
 Output (rút gọn — node đầu tiên và migrations):
 
-```json
-{
+```{
   "summary": {
     "total_nodes": 6,
     "online_nodes": 5,
-    "overloaded_nodes": [],
+    "overloaded_nodes": [
+      "hcm-c3-n01"
+    ],
     "migration_count": 1,
-    "warning_count": 5
+    "warning_count": 8
   },
-  "nodes": [
+  "nodes_before": [
+    {
+      "name": "hcm-c3-n01",
+      "status": "online",
+      "cpu_cores": 64,
+      "mem_total": 549755813888,
+      "cpu_used_cores": 55.0,
+      "cpu_usage_pct": 85.94,
+      "mem_used": 511267456789,
+      "mem_usage_pct": 93.0,
+      "vcpu_allocated": 110,
+      "overcommit_ratio": 1.719,
+      "is_overloaded": true,
+      "is_eligible_target": true,
+      "overload_reasons": [
+        "CPU 85.9% > 80%",
+        "RAM 93.0% > 85%"
+      ],
+      "warnings": []
+    }
+  ],
+  "nodes_after": [
     {
       "name": "hcm-c3-n01",
       "status": "online",
@@ -211,6 +237,8 @@ Output (rút gọn — node đầu tiên và migrations):
     }
   ],
   "warnings": [
+    "node hcm-c3-n04: node offline - không thể nhận VM",
+    "node hcm-c3-n06: mem_total=262144 bytes quá nhỏ (<1GB) - dữ liệu nghi hỏng (nếu đơn vị là MiB thì 262144 MiB = 256 GiB -> có thể exporter xuất sai đơn vị)",
     "vmid=2067 (wp-host-992): cpu_usage=31.0 ngoài [0,1] -> giả định đơn vị %, chia 100",
     "vmid=2073 (vps-nvme-430): cpu_usage=98.0 ngoài [0,1] -> giả định đơn vị %, chia 100",
     "vmid=2065 (cloud-std-682): cpu_usage=20.8 ngoài [0,1] -> giả định đơn vị %, chia 100",
@@ -231,6 +259,7 @@ python3 -m unittest test_proxmox_balance -v
 Output:
 
 ```text
+test_high_cpu_marks_overloaded (test_proxmox_balance.TestAnalyze.test_high_cpu_marks_overloaded) ... ok
 test_high_mem_marks_overloaded (test_proxmox_balance.TestAnalyze.test_high_mem_marks_overloaded) ... ok
 test_overcommit_marks_overloaded (test_proxmox_balance.TestAnalyze.test_overcommit_marks_overloaded) ... ok
 test_tiny_mem_node_not_analyzed (test_proxmox_balance.TestAnalyze.test_tiny_mem_node_not_analyzed)
@@ -263,7 +292,7 @@ test_accepts_within_thresholds (test_proxmox_balance.TestWouldStayHealthy.test_a
 test_rejects_when_mem_over (test_proxmox_balance.TestWouldStayHealthy.test_rejects_when_mem_over) ... ok
 
 ----------------------------------------------------------------------
-Ran 26 tests in 0.005s
+Ran 26 tests in 0.011s
 
 OK
 ```
@@ -309,7 +338,7 @@ Output:
 
 ```text
 LỖI: file JSON không hợp lệ (/tmp/bad.json): Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
-exit code: 0
+exit code: 1
 ```
 
 **Case 3 — JSON thiếu trường (không crash, có warning):**
@@ -321,8 +350,7 @@ python3 proxmox_balance.py /tmp/partial.json; echo "exit code: $?"
 Output:
 
 ```text
-
-=== TẢI TỪNG NODE ===
+=== TẢI TỪNG NODE (TRƯỚC MIGRATE) ===
 NODE           STATUS         CPU    CPU%                 MEM    MEM%  vCPU    OC  TÌNH TRẠNG
 ---------------------------------------------------------------------------------------------
 n1             online       1.0/8   12.5%      2.00GB/16.00GB   12.5%     2 0.25x  ok           
@@ -361,10 +389,9 @@ chặt hơn, có thể thay bằng ILP / min-cost flow.
 
 ```
 phan2-tool/
-├── proxmox_balance.py        # tool chính (~430 dòng)
-├── test_proxmox_balance.py   # 26 unit test (~330 dòng)
-├── generate_readme.sh        # script sinh README này
-└── README.md                 # file này
+├── proxmox_balance.py        # tool chính
+├── test_proxmox_balance.py   # 26 unit test
+└── README.md                 
 ```
 
 ## Hướng phát triển (ngoài phạm vi bài test)
