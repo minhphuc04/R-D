@@ -324,7 +324,7 @@ Output:
 
 ```text
 LỖI: không tìm thấy file /tmp/khong-ton-tai.json
-exit code: 0
+exit code: 1
 ```
 
 **Case 2 — File JSON hỏng:**
