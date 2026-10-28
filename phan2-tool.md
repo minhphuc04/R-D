@@ -23,10 +23,7 @@ python3 proxmox_balance.py ../phan2-proxmox/cluster-pve-hcm-c3.json
 python3 proxmox_balance.py ../phan2-proxmox/cluster-pve-hcm-c3.json --format json
 
 # Tùy chỉnh ngưỡng
-python3 proxmox_balance.py <snapshot.json> \
-    --cpu-threshold 85 \
-    --mem-threshold 90 \
-    --overcommit-threshold 5
+python3 proxmox_balance.py ../phan2-proxmox/cluster-pve-hcm-c3.json --cpu-threshold 85 --mem-threshold 90 --overcommit-threshold 5
 
 # Chạy unit test
 python3 -m unittest test_proxmox_balance -v
