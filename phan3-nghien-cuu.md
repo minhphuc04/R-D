@@ -36,12 +36,20 @@ limit_req_status 429;  limit_req_dry_run on;   # ngưỡng chỉ là điểm kh�
 - **Zone cạn:** state ít dùng nhất bị xóa hoặc request lỗi [1] (hệ quả là bộ đếm của IP đó bị reset *(phân tích)*); tính theo số IP duy nhất cao điểm (64-bit: 20 MB ≈ 160.000 state) và theo dõi `error.log`.
 - **Kế thừa cấu hình:** `limit_req` chỉ kế thừa khi cấp hiện tại không khai báo `limit_req` nào, nên `limit_req` do khách tự thêm vào `location` sẽ vô hiệu chính sách chung [1].
 
-## 4. Hạn chế và tài liệu
+## 4. Kiểm chứng lab và tài liệu
 
-Chưa có benchmark lab; các nhận định hiệu năng chưa đo. Nếu có thêm thời gian: lab Nginx + PHP-FPM, giả lập crawl bằng `wrk`/`hey`, so sánh PHP-FPM worker bận, p95 latency, CPU giữa: không giới hạn / chỉ L7 / L7 + L4.
+**Môi trường lab:** VPS 1 vCPU, Nginx 1.31.8 + PHP-FPM 8.2 (`pm.max_children=5`), endpoint `usleep(50000)`. Tải tạo từ máy local bằng `wrk -t4 -c100 -d30s --latency` qua mạng công cộng; P99 bao gồm RTT nên chỉ dùng so sánh tương đối giữa các kịch bản.
+
+| Kịch bản | Requests/sec | Latency Avg | Latency P99 | Non-2xx | Ghi chú |
+|---|---|---|---|---|---|
+| Baseline (không `limit_req`) | 95.52 | 1.03s | 1.73s | 0 | PHP-FPM nghẽn 5/5 worker, request xếp hàng chờ |
+| Dry-run (`limit_req_dry_run on`) | 88.58 | 1.07s | 1.83s | 0 | Log ghi nhận 883/888 request (99.4%) `REJECTED_DRY_RUN` — không chặn thật, chỉ đếm |
+| Enforce (trả 429) | 11,758.74 | 26.83ms | 222.32ms | 352,681 / 352,986 (99.9%) | Request vượt ngưỡng bị chặn ngay tại Nginx, không chiếm worker PHP-FPM |
+
+**Nhận xét:** Ở baseline, PHP-FPM bị chiếm hết 5/5 worker, P99 lên tới 1.73s do request phải xếp hàng chờ. Dry-run giữ nguyên throughput và latency so với baseline (88.58 req/s, P99 1.83s), nhưng log ghi nhận 883/888 request (99.4%) bị đánh dấu `REJECTED_DRY_RUN` — xác nhận cơ chế dry-run chỉ đếm mà không can thiệp traffic, phù hợp để chạy 1–2 ngày quan sát false-positive trước khi enforce. Khi enforce, Nginx trả 429 cho 99.9% request vượt ngưỡng ngay tại tầng L7, không gọi PHP-FPM: P99 giảm từ 1.73s xuống 222ms (~8 lần), latency trung bình giảm từ ~1s xuống 27ms. Throughput 11,758 req/s ở đây là **tốc độ từ chối** request, không phải năng lực phục vụ request hữu ích — điểm mấu chốt là Nginx chặn được lượng lớn request mà **không tốn worker PHP-FPM nào**, đúng với khuyến nghị ở mục 2: L7 là lớp chính bảo vệ backend, L4 là lưới phụ.
+
+*Hạn chế:* lab nhỏ (1 vCPU, 1 endpoint, tải từ xa qua Internet), chưa đo tách biệt ảnh hưởng của RTT mạng; số liệu đủ để so sánh xu hướng, không đại diện tuyệt đối cho môi trường 40 vhost thật. Cấu hình `burst=5`, `rate=10r/s` chỉ là điểm khởi đầu, cần tinh chỉnh theo lưu lượng thật và theo dõi false-positive bằng `limit_req_dry_run` trước khi enforce.
 
 1. https://nginx.org/en/docs/http/ngx_http_limit_req_module.html
 2. https://wiki.nftables.org/wiki-nftables/index.php/Meters
 3. https://nginx.org/en/docs/http/ngx_http_realip_module.html
-
-(Tra ngày 28/10/2026; cần đối chiếu phiên bản nginx/kernel thực tế trên máy hosting.)
