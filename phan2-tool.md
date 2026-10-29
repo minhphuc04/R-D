@@ -10,7 +10,6 @@ Viết bằng **Python 3.10+**, **không cần dependency ngoài** (chỉ stdlib
 ```bash
 cd phan2-tool
 python3 --version   # cần >= 3.10
-# không cần pip install
 ```
 
 ## Cách chạy
