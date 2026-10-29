@@ -6,14 +6,13 @@
 
 | Tiêu chí | L4 – nftables | L7 – Nginx `limit_req` |
 |---|---|---|
-| Dữ liệu nhìn thấy | IP, port, conntrack; với HTTPS không thấy Host/URI/UA *(phân tích)* | Host, URI, UA, cookie; key `limit_req_zone` có thể là biến hoặc tổ hợp biến [1] |
-| Độ mịn theo khách hàng | Không phân biệt vhost (cùng :443, nội dung mã hóa) *(phân tích)* | Key theo `$binary_remote_addr`, `$server_name`; khai báo được nhiều `limit_req` cùng lúc [1] |
-| Cơ chế | `meter`/dynamic set + `limit rate`; `ct count over N` (từ 4.18) [2] | Leaky bucket, `burst`, `nodelay`; trả 503 mặc định, đổi bằng `limit_req_status` [1] |
-| Bộ nhớ | Dynamic set, gắn được `timeout`; `ct count` không dùng được với set có `timeout` [2] | State 64 B (32-bit) / 128 B (64-bit): 1 MB ≈ 16.000 / 8.000 state; hết chỗ thì xóa state ít dùng nhất, vẫn không đủ thì request bị lỗi [1] |
-| Chặn nhầm | Cao: chặn IP khỏi **mọi** site (CGNAT, IP dùng chung) *(phân tích)* | Thấp hơn: có `burst`, phạm vi theo vhost *(phân tích)* |
-| Sau load balancer | Chỉ thấy IP của LB nếu không truyền IP gốc *(phân tích)* | `set_real_ip_from` + `real_ip_header`; cần build `--with-http_realip_module` [3] |
-| Thử nghiệm an toàn | Không có dry-run riêng; mô phỏng bằng rule `counter` không `drop` *(phân tích)* | `limit_req_dry_run on` (từ 1.17.1): không giới hạn nhưng vẫn đếm [1] |
-
+| Dữ liệu nhìn thấy | IP, port, conntrack; không đọc được Host/URI/UA bên trong HTTPS đã mã hóa *(phân tích)* | Host, URI, UA, cookie; key có thể là biến hoặc tổ hợp biến [1] |
+| Độ mịn theo khách hàng | Không trực tiếp phân biệt vhost qua HTTP khi dùng HTTPS *(phân tích)* | Key theo `$binary_remote_addr`, `$server_name`; hỗ trợ nhiều `limit_req` cùng lúc [1] |
+| Cơ chế | `meter`/dynamic set + `limit rate`; `ct count over N` giới hạn số kết nối đồng thời [2] | Leaky bucket, `burst`, `nodelay`; mặc định trả 503, đổi bằng `limit_req_status` [1] |
+| Bộ nhớ | Dynamic set hỗ trợ `timeout`; `ct count` không dùng được với set có `timeout` [2] | State 64 B (32-bit) / 128 B (64-bit); 1 MB ≈ 16.000 / 8.000 state; hết chỗ sẽ xóa state ít dùng nhất, nếu vẫn không tạo được state mới thì request gặp lỗi [1] |
+| Chặn nhầm | Có thể ảnh hưởng mọi site dùng chung IP bị chặn (CGNAT, IP dùng chung) *(phân tích)* | Có thể giảm phạm vi ảnh hưởng bằng key theo vhost; vẫn có nguy cơ chặn nhầm *(phân tích)* |
+| Sau load balancer | Thường chỉ thấy IP của LB nếu không bảo toàn IP nguồn ở tầng mạng *(phân tích)* | Dùng `set_real_ip_from` + `real_ip_header`; cần module `ngx_http_realip_module` [3] |
+| Thử nghiệm an toàn | Không có dry-run riêng; có thể thử bằng rule `counter` chưa áp dụng `drop` *(phân tích)* | `limit_req_dry_run on` (từ 1.17.1): không giới hạn request nhưng vẫn ghi nhận trạng thái [1] |
 Số trong ngoặc vuông là nguồn ở mục 4; *(phân tích)* là suy luận của người viết, chưa đo.
 
 ## 2. Khuyến nghị: L7 là lớp chính, L4 là lưới phụ
