@@ -13,6 +13,7 @@
 | Chặn nhầm | Có thể ảnh hưởng mọi site dùng chung IP bị chặn (CGNAT, IP dùng chung) *(phân tích)* | Có thể giảm phạm vi ảnh hưởng bằng key theo vhost; vẫn có nguy cơ chặn nhầm *(phân tích)* |
 | Sau load balancer | Thường chỉ thấy IP của LB nếu không bảo toàn IP nguồn ở tầng mạng *(phân tích)* | Dùng `set_real_ip_from` + `real_ip_header`; cần module `ngx_http_realip_module` [3] |
 | Thử nghiệm an toàn | Không có dry-run riêng; có thể thử bằng rule `counter` chưa áp dụng `drop` *(phân tích)* | `limit_req_dry_run on` (từ 1.17.1): không giới hạn request nhưng vẫn ghi nhận trạng thái [1] |
+
 Số trong ngoặc vuông là nguồn ở mục 4; *(phân tích)* là suy luận của người viết, chưa đo.
 
 ## 2. Khuyến nghị: L7 là lớp chính, L4 là lưới phụ
