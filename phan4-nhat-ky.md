@@ -3,8 +3,7 @@
 **Họ tên:** Trần Minh Phúc
 **Nhận đề lúc:** 16:27 - 27/10/2026
 **Nộp bài lúc:** [điền]
-**Tổng thời gian làm thật (ước tính):** [điền: tự cộng các phiên bên dưới. Riêng phần 3 theo ghi chú là khoảng 135 phút]
-
+**Tổng thời gian làm thật (ước tính):** Khoảng 7 giờ 5 phút
 ## Các phiên làm việc
 
 | Thời điểm | Thời lượng | Làm phần nào | Ghi chú (kẹt ở đâu, đã thử gì) |
