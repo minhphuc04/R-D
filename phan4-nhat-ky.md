@@ -41,8 +41,7 @@
 
 ## Câu hỏi đã gửi cho người ra đề
 
-- [điền, hoặc ghi "Không có". Nên có mail xác nhận nhận đề trong 24 giờ và nêu mốc dự kiến nộp]
-
+- Không có.
 ## Dùng AI và công cụ
 
 > Cột "Công cụ": ghi đúng công cụ bạn đã dùng cho từng bước (Claude, DeepSeek, hoặc cả hai). Hiện đang để chung vì mình chưa biết bước nào dùng công cụ nào.
