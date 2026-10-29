@@ -1,9 +1,9 @@
 # Nhật ký làm bài
 
-**Họ tên:** Trần Minh Phúc
-**Nhận đề lúc:** 16:27 - 27/10/2026
-**Nộp bài lúc:** [điền]
-**Tổng thời gian làm thật (ước tính):** Khoảng 7 giờ 5 phút
+- **Họ tên:** Trần Minh Phúc
+- **Nhận đề lúc:** 16:27 - 27/10/2026
+- **Nộp bài lúc:** [điền]
+- **Tổng thời gian làm thật (ước tính):** Khoảng 7 giờ 5 phút
 
 ## Các phiên làm việc
 
