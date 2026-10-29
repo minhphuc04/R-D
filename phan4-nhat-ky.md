@@ -63,7 +63,7 @@
 | Phần 3: dựng lab benchmark | [Claude / DeepSeek: điền] (hướng dẫn từng bước) + bạn tự chạy | Hướng dẫn tạo Dockerfile, `docker-compose.yml`, cấu hình Nginx, lệnh `wrk`, cách đọc `fpm-status` | Tự chạy toàn bộ lệnh trên VPS và máy local; tự chụp/copy output `wrk`; tự phát hiện `REJECTED_DRY_RUN=0` và sửa log format |
 | Phần 3: viết nhận xét lab | [Claude / DeepSeek: điền] + bạn tự đọc số | Diễn giải ý nghĩa các con số (P99 giảm khoảng 8 lần, throughput ~11k là tốc độ từ chối) | Tự đọc lại output `wrk`, tự kiểm tra con số 883/888 và 352.681/352.986 khớp nhau [điền: xác nhận đã làm] |
 | Phần 3: sửa lỗi log format | [Claude / DeepSeek: điền] (gợi ý lệnh `sed`) + bạn tự chạy | Thêm `log_format` có `$limit_req_status`, chạy lại dry-run | Tự chạy `sed`, tự `grep` xác nhận, tự chạy lại `wrk` 10 giây và đếm log |
-| Phần 3: trình bày | [Claude: điền] | Điều chỉnh lại format Markdown, hỗ trợ phần nội dung và khung triển khai | [điền: đã đọc lại và chỉnh gì] |
+| Phần 3: trình bày | [Claude: điền] | Điều chỉnh lại format Markdown, hỗ trợ phần nội dung và khung triển khai | Rà soát, đọc lại nội dung, kiểm chứng và đối chiếu với các tài liệu liên quan |
 | Ảnh chụp bằng chứng phần 1 | (bạn tự làm) | [điền: chỉ ghi nếu bạn tự chụp từ lệnh bạn chạy] | |
 
 ## Phần chưa xong hoặc chưa hài lòng
