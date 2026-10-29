@@ -9,8 +9,8 @@
 
 | Thời điểm | Thời lượng | Làm phần nào | Ghi chú (kẹt ở đâu, đã thử gì) |
 |---|---|---|---|
-| [điền] (gợi ý: 27/10 chiều tối) | [điền] | Phần 1: điều tra sự cố | Dữ liệu nhiều (log LB ~1,1 MB, nginx ~210 KB). Loại trừ giả thuyết bot bằng cách so mốc thời gian. [điền: chỗ bạn tự chạy lại lệnh grep] |
-| [điền] (gợi ý: 27-28/10) | [điền] | Phần 2: viết tool Proxmox và test | [điền: phần bạn tự viết, chỗ bị kẹt] |
+| [điền] (gợi ý: 27/10 chiều tối) | [điền] | Phần 1: điều tra sự cố, viết báo cáo | Dữ liệu nhiều (log LB ~1,1 MB, nginx ~210 KB). Ban đầu nghi bot crawl, nhưng bot chỉ xuất hiện lúc 01:41, sau lỗi 5xx đầu tiên lúc 01:33, nên chuyển sang hướng đĩa đầy. Sau khi có báo cáo, tự chạy lại các lệnh grep trên syslog và log LB để xác nhận mốc giờ và số lượng lỗi. |
+| [điền] (gợi ý: 27-28/10) | [điền] | Phần 2: viết tool Proxmox và test | Viết bản đầu của tool và test. AI hỗ trợ nhiều phần này |
 | [điền] (gợi ý: 28/10 tối) | [điền] | Phần 2: sửa tool theo review, sinh README | Sửa: bảng hiển thị tải trước migrate, mã thoát khác 0 khi lỗi, cảnh báo node không migrate được, số test. Chạy lại test và tool trên dữ liệu thật |
 | 28/10 tối | ~30 phút | Phần 3 (Đề B): đọc đề, chọn đề B, viết bản nháp đầu | Viết khung so sánh L4 và L7 dựa trên hiểu biết về nftables và Nginx; đặt giả định LB là L7 nên L4 trên node chỉ thấy IP của LB [điền: bạn tự viết hoàn toàn hay có AI gợi ý khung, xem mục dùng AI] |
 | 28/10 tối | ~20 phút | Phần 3: rà soát bản nháp | Nhờ AI đối chiếu với yêu cầu đề; phát hiện lỗi logic ở lớp L4 (nftables trên node không đọc được XFF/PROXY protocol); viết lại bảng so sánh |
