@@ -41,7 +41,6 @@
 **Phần 3**
 - LB (`lb-hcm-01`) là L7 vì có access log HTTP ở Phần 1. Do đó nftables trên node chỉ thấy IP của LB, không đọc được `X-Forwarded-For` hay PROXY protocol, nên lớp L4 chặn IP khách được đặt ở LB/edge, còn trên node L4 chỉ dùng để cho phép 80/443 từ IP LB.
 - Ngưỡng `rate`, `burst` trong cấu hình mẫu chỉ là điểm khởi đầu, chưa đo trên traffic thực; dải IP của LB trong `set_real_ip_from` là ví dụ.
-- Benchmark Cloudflare (2018) đo drop gói UDP chứ không đo chi phí Nginx từ chối HTTP request, nên chỉ dùng để xếp thứ bậc giữa các điểm chặn.
 - Lab dùng `pm.max_children=5` và endpoint `usleep(50000)` để mô phỏng tác vụ tốn worker; đây là mô hình thu nhỏ, không đại diện cho 40 vhost thật. Tải chạy từ máy local qua Internet nên P99 bao gồm RTT, chỉ dùng để so sánh tương đối.
 
 ## Câu hỏi đã gửi cho người ra đề
