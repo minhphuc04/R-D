@@ -43,12 +43,10 @@
 - Không có.
 ## Dùng AI và công cụ
 
-> Cột "Công cụ": ghi đúng công cụ bạn đã dùng cho từng bước (Claude, DeepSeek, hoặc cả hai). Hiện đang để chung vì mình chưa biết bước nào dùng công cụ nào.
-
 | Bước | Công cụ | Dùng để làm gì | Bạn đã kiểm tra, sửa lại gì |
 |---|---|---|---|
-| Phần 1: đọc log, tìm nguyên nhân, dựng khung postmortem | Claude | Đọc syslog, snapshot, log nginx/php/mysql/LB; đếm 502/504, so mốc giờ bot với lỗi đầu tiên; soạn `phan1-postmortem.md` | [điền: ví dụ tự grep lại các dòng trích dẫn, tự chạy lệnh, viết lại các đoạn nào, sửa chỗ nào] |
-| Phần 2: review tool và README | Claude | Chỉ ra 4 điểm cần sửa (bảng trước/sau migrate, exit code, số test, node không migrate được); chạy test và tool; viết `generate_readme.py` sinh README bằng output thật | [điền: phần code bạn tự viết, phần bạn sửa sau review, đã tự chạy lại tool và test chưa] |
+| Phần 1: đọc log, tìm nguyên nhân tổng quát, dựng khung postmortem | Claude | Đọc syslog, snapshot, log nginx/php/mysql/LB; đếm 502/504, so mốc giờ bot với lỗi đầu tiên. | Em xem tổng quan hết tất cả file logs để nắm tổng quan, research các nguyên nhân phổ biến gây ra lỗi 502/504. Từ các thông tin AI phân tích tổng quan, em có nhờ [điền: ví dụ tự grep lại các dòng trích dẫn, tự chạy lệnh, viết lại các đoạn nào, sửa chỗ nào] |
+| Phần 2: viết tool và review tool | Claude / DeepSeek | Chỉ ra 4 điểm cần sửa (bảng trước/sau migrate, exit code, số test, node không migrate được); chạy test và tool| [điền: phần code bạn tự viết, phần bạn sửa sau review, đã tự chạy lại tool và test chưa] |
 | Phần 2: kiểm tra dữ liệu | Claude | Phát hiện `vmid` 2001 trùng trên hai node | [điền: bạn tự xác minh trong file JSON chưa, quyết định xử lý thế nào] |
 | Phần 3: viết bản nháp | [Claude / DeepSeek: điền] | Gợi ý khung so sánh L4 và L7, cấu trúc bảng tiêu chí | Tự viết lại nội dung theo hiểu biết của mình; tự chọn Đề B; tự đặt giả định LB là L7 [điền: xác nhận đúng sự thật] |
 | Phần 3: rà soát logic | [Claude / DeepSeek: điền] | Chỉ ra lỗi logic: nftables trên node không đọc được XFF/PROXY protocol nếu LB là L7 | Tự suy luận lại và đồng ý; sửa lại phần L4 trong bảng và khuyến nghị |
@@ -76,4 +74,4 @@
 - Đặt rõ giả định về kiến trúc LB (L4 hay L7) ngay từ đầu, trước khi thiết kế lớp L4, vì giả định này quyết định L4 đặt ở đâu.
 - Dựng lab sớm hơn và đo cả L4 lẫn L7, để mọi nhận định hiệu năng đều có số liệu thật thay vì chỉ so sánh gián tiếp.
 - Tự đọc log và chạy lại các lệnh trước khi nhờ AI, và xác nhận nhận đề từ sớm.
-- [điền thêm bằng suy nghĩ của chính bạn]
+- Tìm hiểu kĩ về bản chất và ý nghĩa của từng phần. Thực chất em chưa được làm trực tiếp trong môi trường thực tế về các nội dung trên nên có nhờ AI hỗ trợ nhiều. Nhưng em có chủ động research, kiểm chứng lại để hiểu bản chất hơn.
