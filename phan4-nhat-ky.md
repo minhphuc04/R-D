@@ -22,8 +22,6 @@
 | 29/10 | ~10 phút | Phần 3: sửa log format để đếm `REJECTED_DRY_RUN` | Ban đầu grep ra 0 do log format chưa có `$limit_req_status`; thêm `log_format` và `access_log`, chạy lại dry-run 10 giây, thu được 883/888 request |
 | [điền] | [điền] | Phần 4: nhật ký, đóng gói, gửi bài | |
 
-> Thời lượng phần 3 là ước tính của bạn; hãy giữ mức "tối/đêm" nếu chỉ nhớ tương đối, đừng chỉnh cho đẹp.
-
 ## Giả định đã đặt ra
 
 **Phần 1**
