@@ -7,7 +7,7 @@
 | Tiêu chí | L4 – nftables | L7 – Nginx `limit_req` |
 |---|---|---|
 | Dữ liệu nhìn thấy | IP, port, conntrack; không đọc được Host/URI/UA bên trong HTTPS đã mã hóa *(phân tích)* | Host, URI, UA, cookie; key có thể là biến hoặc tổ hợp biến [1] |
-| Khả năng giới hạn theo từng website | Không trực tiếp phân biệt vhost qua HTTP khi dùng HTTPS *(phân tích)* | Key theo `$binary_remote_addr`, `$server_name`; hỗ trợ nhiều `limit_req` cùng lúc [1] |
+| Khả năng giới hạn theo từng website | Không trực tiếp phân biệt vhost dựa trên HTTP Host khi HTTPS đã mã hóa *(phân tích)* | Có thể giới hạn theo `$binary_remote_addr`, `$server_name`; hỗ trợ nhiều `limit_req` cùng lúc [1] |
 | Cơ chế | `meter`/dynamic set + `limit rate`; `ct count over N` giới hạn số kết nối đồng thời [2] | Leaky bucket, `burst`, `nodelay`; mặc định trả 503, đổi bằng `limit_req_status` [1] |
 | Bộ nhớ | Dynamic set hỗ trợ `timeout`; `ct count` không dùng được với set có `timeout` [2] | State 64 B (32-bit) / 128 B (64-bit); 1 MB ≈ 16.000 / 8.000 state; hết chỗ sẽ xóa state ít dùng nhất, nếu vẫn không tạo được state mới thì request gặp lỗi [1] |
 | Chặn nhầm | Có thể ảnh hưởng mọi site dùng chung IP bị chặn (CGNAT, IP dùng chung) *(phân tích)* | Có thể giảm phạm vi ảnh hưởng bằng key theo vhost; vẫn có nguy cơ chặn nhầm *(phân tích)* |
