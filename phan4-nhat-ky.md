@@ -1,6 +1,6 @@
 # Nhật ký làm bài
 
-**Họ tên:** [điền]
+**Họ tên:** Trần Minh Phúc
 **Nhận đề lúc:** [điền: giờ nhận email]
 **Nộp bài lúc:** [điền]
 **Tổng thời gian làm thật (ước tính):** [điền: tự cộng các phiên bên dưới, tính cả thời gian không chat với AI]
