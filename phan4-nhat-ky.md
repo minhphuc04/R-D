@@ -30,7 +30,7 @@
 - `cpu_usage` trong khoảng (1, 100] được hiểu là phần trăm và chia 100 (đề nói 0-1 nhưng dữ liệu có `31.0`, `98.0`, `20.8`).
 - Node `hcm-c3-n06` có `mem_total=262144` được coi là dữ liệu hỏng, không làm node nguồn hoặc đích; nghi exporter xuất sai đơn vị (nếu là MiB thì đúng 256 GiB).
 - Ngưỡng 80% CPU / 85% RAM / 4x overcommit chọn theo kinh nghiệm chung, chưa hiệu chỉnh bằng dữ liệu thật.
-- VM `stopped` không tính vào tải; node `offline` không nhận VM.
+- VM `stopped` không tính vào tải; node `offline` không nhận VM.    
 - Snapshot có `vmid` 2001 xuất hiện trên cả `hcm-c3-n01` và `hcm-c3-n02`; tool chưa xử lý trường hợp trùng (xem mục chưa xong).
 
 **Phần 3**
@@ -45,18 +45,16 @@
 
 | Bước | Công cụ | Dùng để làm gì | Bạn đã kiểm tra, sửa lại gì |
 |---|---|---|---|
-| Phần 1: đọc log, tìm nguyên nhân tổng quát, dựng khung postmortem | Claude | Đọc syslog, snapshot, log nginx/php/mysql/LB; đếm 502/504, so mốc giờ bot với lỗi đầu tiên. | Em xem tổng quan hết tất cả file logs để nắm tổng quan, research các nguyên nhân phổ biến gây ra lỗi 502/504. Từ các thông tin AI phân tích tổng quan, em có nhờ [điền: ví dụ tự grep lại các dòng trích dẫn, tự chạy lệnh, viết lại các đoạn nào, sửa chỗ nào] |
-| Phần 2: viết tool và review tool | Claude / DeepSeek | Chỉ ra 4 điểm cần sửa (bảng trước/sau migrate, exit code, số test, node không migrate được); chạy test và tool| [điền: phần code bạn tự viết, phần bạn sửa sau review, đã tự chạy lại tool và test chưa] |
+| Phần 1: đọc log, tìm nguyên nhân tổng quát, dựng khung postmortem | Claude | Đọc syslog, snapshot, log nginx/php/mysql/LB; đếm 502/504, so mốc giờ bot với lỗi đầu tiên. | Em xem tổng quan hết tất cả file logs để nắm tổng quan, research các nguyên nhân phổ biến gây ra lỗi 502/504. Từ các thông tin AI phân tích tổng quan, em có chạy lại các lệnh để xem log chi tiết, đối chiếu và nhận định.|
+| Phần 2: viết tool và review tool | Claude / DeepSeek | Chỉ ra 4 điểm cần sửa (bảng trước/sau migrate, exit code, số test, node không migrate được); chạy test và tool| Em có nhờ AI kiểm tra sơ qua tool thì ghi nhận có các điểm cần sửa, em có chạy lại tool kiểm tra các kết quả ban đâu, tìm nguyên nhân tại sao lại ra kết quả mà bị báo các điểm cần điều chỉnh. Sau đó em có tham khảo các điều chỉnh từ AI để điều chỉnh lại tool, khắc phục các điểm cần sửa |
 | Phần 2: kiểm tra dữ liệu | Claude | Phát hiện `vmid` 2001 trùng trên hai node | [điền: bạn tự xác minh trong file JSON chưa, quyết định xử lý thế nào] |
-| Phần 3: viết bản nháp | [Claude / DeepSeek: điền] | Gợi ý khung so sánh L4 và L7, cấu trúc bảng tiêu chí | Tự viết lại nội dung theo hiểu biết của mình; tự chọn Đề B; tự đặt giả định LB là L7 [điền: xác nhận đúng sự thật] |
-| Phần 3: rà soát logic | [Claude / DeepSeek: điền] | Chỉ ra lỗi logic: nftables trên node không đọc được XFF/PROXY protocol nếu LB là L7 | Tự suy luận lại và đồng ý; sửa lại phần L4 trong bảng và khuyến nghị |
-| Phần 3: đối chiếu tài liệu chính thức | [Claude / DeepSeek: điền] | Đối chiếu số liệu với tài liệu nginx `limit_req`, nftables Meters, nginx realip | Tự mở lại 3 trang tài liệu để xác nhận các con số và mốc phiên bản |
-| Phần 3: tìm benchmark ngoài | [Claude / DeepSeek: điền] | Tìm bài benchmark uy tín về chi phí drop gói (Cloudflare 2018) | [điền: đã tự mở bài gốc, kiểm tra lại các số 175k, 333k, 1,69M, 1,53M pps; ghi rõ giới hạn của benchmark] |
-| Phần 3: dựng lab benchmark | [Claude / DeepSeek: điền] (hướng dẫn từng bước) + bạn tự chạy | Hướng dẫn tạo Dockerfile, `docker-compose.yml`, cấu hình Nginx, lệnh `wrk`, cách đọc `fpm-status` | Tự chạy toàn bộ lệnh trên VPS và máy local; tự chụp/copy output `wrk`; tự phát hiện `REJECTED_DRY_RUN=0` và sửa log format |
-| Phần 3: viết nhận xét lab | [Claude / DeepSeek: điền] + bạn tự đọc số | Diễn giải ý nghĩa các con số (P99 giảm khoảng 8 lần, throughput ~11k là tốc độ từ chối) | Tự đọc lại output `wrk`, tự kiểm tra con số 883/888 và 352.681/352.986 khớp nhau [điền: xác nhận đã làm] |
-| Phần 3: sửa lỗi log format | [Claude / DeepSeek: điền] (gợi ý lệnh `sed`) + bạn tự chạy | Thêm `log_format` có `$limit_req_status`, chạy lại dry-run | Tự chạy `sed`, tự `grep` xác nhận, tự chạy lại `wrk` 10 giây và đếm log |
-| Phần 3: trình bày | [Claude: điền] | Điều chỉnh lại format Markdown, hỗ trợ phần nội dung và khung triển khai | Rà soát, đọc lại nội dung, kiểm chứng và đối chiếu với các tài liệu liên quan |
-| Ảnh chụp bằng chứng phần 1 | (bạn tự làm) | [điền: chỉ ghi nếu bạn tự chụp từ lệnh bạn chạy] | |
+| Phần 3: viết bản nháp | Claude | Research thêm thông tin về L4 và L7, tham khảo AI để xây dựng khung so sánh và đề xuất cấu trúc bảng tiêu chí. Từ khung gợi ý, em xem xét các tiêu chí phù hợp, đối chiếu thông tin kỹ thuật và kiểm chứng tính chính xác trước khi hoàn thiện bảng so sánh.| Tự viết lại nội dung theo hiểu biết của mình; tự chọn Đề B; tự đặt giả định LB là L7 |
+| Phần 3: rà soát logic | Claude | Chỉ ra lỗi logic: nftables trên node không đọc được XFF/PROXY protocol nếu LB là L7 | Tự suy luận lại và đồng ý; sửa lại phần L4 trong bảng và khuyến nghị |
+| Phần 3: đối chiếu tài liệu chính thức | Claude | Đối chiếu số liệu với tài liệu nginx `limit_req`, nftables Meters, nginx realip | Tự mở lại 3 trang tài liệu để xác nhận các con số và mốc phiên bản |
+| Phần 3: dựng lab benchmark | Claude / DeepSeek | Đưa ra cấu trúc tổng quan để hình dung cách triển khai. Gợi ý Dockerfile, `docker-compose.yml`, cấu hình Nginx, lệnh `wrk`, cách đọc `fpm-status` | Tự chạy toàn bộ lệnh trên VPS và máy local; tự phát hiện `REJECTED_DRY_RUN=0` và sửa log format |
+| Phần 3: viết nhận xét lab | Claude | Diễn giải ý nghĩa các con số (P99 giảm khoảng 8 lần, throughput ~11k là tốc độ từ chối) | Tự đọc lại output `wrk`, tự kiểm tra con số 883/888 và 352.681/352.986 khớp nhau |
+| Phần 3: sửa lỗi log format | Claude / DeepSeek | Thêm `log_format` có `$limit_req_status`, chạy lại dry-run | Tự chạy `sed`, tự `grep` xác nhận, tự chạy lại `wrk` 10 giây và đếm log |
+| Phần 3: trình bày | Claude | Điều chỉnh lại format Markdown, hỗ trợ phần nội dung và khung triển khai | Rà soát, đọc lại nội dung, kiểm chứng và đối chiếu với các tài liệu liên quan |
 
 ## Phần chưa xong hoặc chưa hài lòng
 
