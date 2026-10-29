@@ -29,7 +29,7 @@ Từ khoảng 01:33 ngày 20/10, các website trên `web-hcm-07` trả 502/504 c
 
 **(a) Log nginx không được xoay.** Cấu hình bị gõ sai:
 ```
-/etc/logrotate.d/nginx:   dailly          <- phải là "daily"
+/etc/logrotate.d/nginx:   dailly          <- phải là "daily", nhưng chưa phải là nguyên nhân.
 syslog 14/10..20/10 00:00:02: logrotate: error: /etc/logrotate.d/nginx:3 unknown option 'dailly' -- ignoring line
 syslog 14/10..20/10 00:00:02: logrotate: error: found error in /var/log/nginx/*.log , skipping
 du-var.txt:  -rw-r----- 1 www-data adm 37G Oct 20 01:33 access.log      (file xoay gần nhất: access.log.1, mtime 13/10)
