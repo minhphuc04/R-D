@@ -7,8 +7,6 @@
 
 ## Các phiên làm việc
 
-> Chỉ ghi đúng với thực tế của bạn. Cột thời điểm của phần 1 và 2 là gợi ý theo lịch sử chat, hãy sửa theo thời gian bạn thực sự làm.
-
 | Thời điểm | Thời lượng | Làm phần nào | Ghi chú (kẹt ở đâu, đã thử gì) |
 |---|---|---|---|
 | [điền] (gợi ý: 27/10 chiều tối) | [điền] | Phần 1: điều tra sự cố | Dữ liệu nhiều (log LB ~1,1 MB, nginx ~210 KB). Loại trừ giả thuyết bot bằng cách so mốc thời gian. [điền: chỗ bạn tự chạy lại lệnh grep] |
