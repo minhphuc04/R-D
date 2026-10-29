@@ -9,10 +9,10 @@
 
 | Thời điểm | Thời lượng | Làm phần nào | Ghi chú (kẹt ở đâu, đã thử gì) |
 |---|---|---|---|
-| 27/10/2026 tối | ~2h | Phần 1: điều tra sự cố | Dữ liệu nhiều (log LB ~1,1 MB, nginx ~210 KB). Ban đầu nghi bot crawl, nhưng bot chỉ xuất hiện lúc 01:41, sau lỗi 5xx đầu tiên lúc 01:33, nên chuyển sang hướng đĩa đầy. Sau khi có báo cáo, tự chạy lại các lệnh grep trên syslog và log LB để xác nhận mốc giờ và số lượng lỗi. |
-| 28/10/2026 tối | ~1h30p | Phần 2: viết tool Proxmox và test | Viết bản đầu của tool và test. AI hỗ trợ nhiều phần này |
-| 28/10/2026 tối / 28/10/2026 | ~30p | Phần 2: review lại tool | Sửa: bảng hiển thị tải trước migrate, mã thoát khác 0 khi lỗi, cảnh báo node không migrate được, số test. Chạy lại test và tool trên dữ liệu thật |
-| 28/10 tối | ~30 phút | Phần 3 (Đề B): đọc đề, chọn đề B, viết bản nháp đầu | Viết khung so sánh L4 và L7 dựa trên hiểu biết về nftables và Nginx; đặt giả định LB là L7 nên L4 trên node chỉ thấy IP của LB [điền: bạn tự viết hoàn toàn hay có AI gợi ý khung, xem mục dùng AI] |
+| 27/10 tối | ~2h | Phần 1: điều tra sự cố | Dữ liệu nhiều (log LB ~1,1 MB, nginx ~210 KB). Ban đầu nghi bot crawl, nhưng bot chỉ xuất hiện lúc 01:41, sau lỗi 5xx đầu tiên lúc 01:33, nên chuyển sang hướng đĩa đầy. Sau khi có báo cáo, tự chạy lại các lệnh grep trên syslog và log LB để xác nhận mốc giờ và số lượng lỗi. |
+| 28/10 tối | ~1h30p | Phần 2: viết tool Proxmox và test | Viết bản đầu của tool và test. AI hỗ trợ phần này |
+| 28/10 tối | ~30p | Phần 2: review lại tool | Sửa: bảng hiển thị tải trước migrate, mã thoát khác 0 khi lỗi, cảnh báo node không migrate được, số test. Chạy lại test và tool trên dữ liệu thật |
+| 28/10 tối | ~30 phút | Phần 3 (Đề B): chọn đề B, tham khảo các nội dung liên quan tại các documents liên quan. Research thông tin thêm từ AI và nhờ AI đưa ra 1 gợi ý khung để dễ hình dung và kiểm chứng | Viết khung so sánh L4 và L7 dựa trên các thông tin research về nftables và Nginx; đặt giả định LB là L7 nên L4 trên node chỉ thấy IP của LB |
 | 28/10 tối | ~20 phút | Phần 3: rà soát bản nháp | Nhờ AI đối chiếu với yêu cầu đề; phát hiện lỗi logic ở lớp L4 (nftables trên node không đọc được XFF/PROXY protocol); viết lại bảng so sánh |
 | 28/10 tối | ~15 phút | Phần 3: đối chiếu tài liệu chính thức | Nhờ AI tra tài liệu nginx `limit_req`, nftables Meters, nginx realip; tự mở lại các trang để xác nhận số liệu (16.000/8.000 state mỗi MB, `limit_req_dry_run` từ 1.17.1, `ct count` không dùng với set có `timeout`) |
 | 28/10 đêm | ~45 phút | Phần 3: dựng lab benchmark trên VPS | Tự cài Docker trên VPS, tạo stack Nginx + PHP-FPM (`pm.max_children=5`), chạy `wrk` từ máy local cho 3 kịch bản baseline / dry-run / enforce; ghi lại Req/s, P99, số `REJECTED_DRY_RUN`, số Non-2xx |
