@@ -13,7 +13,7 @@ tran-minh-phuc/
   phan2-tool/            # Tool cân bằng tải Proxmox (Python), unit test, README riêng
     proxmox_balance.py
     test_proxmox_balance.py
-    README.md
+    phan2-tool.md
   phan3-nghien-cuu.md    # Đề B: chặn / rate-limit bot crawl, L4 (nftables) vs L7 (Nginx)
   phan4-nhat-ky.md       # Nhật ký làm bài, ghi rõ chỗ dùng AI và cách kiểm chứng
 ```
