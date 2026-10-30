@@ -62,7 +62,7 @@ Ngưỡng mặc định: CPU 80%, RAM 85%, overcommit vCPU 4x. Ví dụ output t
 
 ### Phần 4 – Nhật ký
 
-Ghi mốc thời gian từng phiên, giả định, các bước dùng AI (Claude, DeepSeek) và việc tự kiểm chứng lại, phần chưa xong và điều sẽ làm khác.
+Ghi mốc thời gian từng phiên, giả định, các bước dùng AI và việc tự kiểm chứng lại, phần chưa xong và điều sẽ làm khác.
 
 ## 3. Các giả định chính
 
