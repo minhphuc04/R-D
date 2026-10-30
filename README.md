@@ -3,6 +3,7 @@
 - **Nhận đề:** 16:27, 27/10/2026
 - **Nộp bài:** 12:00, 30/10/2026
 - **Thời gian làm thật (ước tính):** khoảng 7 giờ 5 phút (chi tiết trong `phan4-nhat-ky.md`)
+- Tại báo cáo của mỗi phần em đã trình bày rõ cách chạy tool và các giả định liên quan để thuận tiện cho việc đối chiếu trực tiếp với nội dung tương ứng trong bài làm. 
 
 ## 1. Cấu trúc bài nộp
 
