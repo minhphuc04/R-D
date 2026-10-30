@@ -65,7 +65,6 @@
 - **Phần 3:** lab chỉ có 1 endpoint, chưa mô phỏng 40 vhost nên chưa kiểm chứng được "độ mịn theo khách hàng" (áp `limit_req` riêng từng vhost) trong thực tế.
 - **Phần 3:** chưa mô phỏng IP dùng chung/NAT để đo rủi ro chặn nhầm.
 - **Phần 3:** chưa trích source code Nginx cho cơ chế đếm/xóa state; nhận định dựa trên tài liệu chính thức.
-- **Phần 3:** độ dài có thể sát hoặc vượt một trang A4, cần kiểm tra bản in.
 
 ## Nếu làm lại, bạn sẽ làm khác điều gì?
 
