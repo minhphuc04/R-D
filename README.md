@@ -91,4 +91,4 @@ Ghi mốc thời gian từng phiên, giả định, các bước dùng AI và vi
 
 ## 5. Về việc dùng AI
 
-Mình dùng Claude và DeepSeek ở nhiều bước (đọc log, review tool, dựng khung so sánh, gợi ý cấu hình lab). Chi tiết từng bước và cách tự kiểm chứng kết quả AI nằm trong `phan4-nhat-ky.md`.
+Dùng Claude và DeepSeek ở nhiều bước (đọc log, review tool, dựng khung so sánh, gợi ý cấu hình lab). Chi tiết từng bước và cách tự kiểm chứng kết quả AI nằm trong `phan4-nhat-ky.md`.
