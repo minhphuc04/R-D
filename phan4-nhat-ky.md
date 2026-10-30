@@ -70,5 +70,4 @@
 
 - Đặt rõ giả định về kiến trúc LB (L4 hay L7) ngay từ đầu, trước khi thiết kế lớp L4, vì giả định này quyết định L4 đặt ở đâu.
 - Dựng lab sớm hơn và đo cả L4 lẫn L7, để mọi nhận định hiệu năng đều có số liệu thật thay vì chỉ so sánh gián tiếp.
-- Tự đọc log và chạy lại các lệnh trước khi nhờ AI, và xác nhận nhận đề từ sớm.
 - Tìm hiểu kĩ về bản chất và ý nghĩa của từng phần. Thực chất em chưa được làm trực tiếp trong môi trường thực tế về các nội dung trên nên có nhờ AI hỗ trợ nhiều. Nhưng em có chủ động research, kiểm chứng lại để hiểu bản chất hơn.
