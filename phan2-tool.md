@@ -390,7 +390,7 @@ chặt hơn, có thể thay bằng ILP / min-cost flow.
 phan2-tool/
 ├── proxmox_balance.py        # tool chính
 ├── test_proxmox_balance.py   # 26 unit test
-└── README.md                 
+└── phan2-tool.md             # Báo cáo cho phần tool              
 ```
 
 ## Hướng phát triển (ngoài phạm vi bài test)
